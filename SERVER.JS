@@ -1,4 +1,4 @@
-//ideas used from w3schools
+
 
 var http = require("http"); //get http to use its functions
 var fs = require("fs"); //get filestream to use its function
