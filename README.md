@@ -1,11 +1,5 @@
 # MY-WayPoints
 
-
-
-IDE Used = VISUAL STUDIO CODE
-API Used = GOOGLEMAPS API, OPENWEATHERMAP
-
-
 1) First download the Visual Studio Code
 2) Get Google Map API key from https://developers.google.com/maps/documentation/javascript/get-api-key.
 2) Get Open Weather Map API key from https://openweathermap.org/appid .
