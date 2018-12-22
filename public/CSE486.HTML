@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  //to use AJAX</script>
+    <link rel="stylesheet" type="text/css" href="./css/CSE486.css">
+    <style>
+
+
+
+
+        input[type='text'] { font-size: 15px; background-color: mistyrose; color:black;}
+
+
+    </style>
+</head>
+
+<body>
+    <div class="bg">
+        <h1 align="center"> WELCOME TO MYWAYPOINTS</h1>
+
+
+
+        <div class="border">
+            <form id="input" align="center">
+                <h2 <align="center"> Please enter the start and end location to know the routes and weather. </h2>
+                Lat of Start Location <input type="text" id="lat_a"><br><br>
+                Lon of Start Location <input type="text" id="lon_a"><br><br>
+                Lat of End Location <input type="text" id="lat_b"><br><br>
+                Lon of End Location <input type="text" id="lon_b">
+                <!-- User inputs   -->
+                <br><br>
+            </form>
+
+            <button id="s" onclick="showMap()">Show Route</button>
+            <!-- when the user hits the button fire the function showMap  -->
+
+
+        </div>
+    </div>
+    <div id="map"></div>
+
+
+    <script>
+
+
+
+        //this function was used from the sample of Google Maps Api and edited to do other functions
+        function showMap() {
+            window.scrollBy(0, 1000); // when the button is pressed the page will scroll down automatically
+
+            var directionsDisplay = new google.maps.DirectionsRenderer;
+            var directionsService = new google.maps.DirectionsService;
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 14,
+                center: { lat: 37.77, lng: -122.447 }  // lat and lon of the place  shown in the begining of the page 
+
+            });
+            directionsDisplay.setMap(map);
+
+            calculateAndDisplayRoute(directionsService, directionsDisplay);
+            document.getElementById('mode').addEventListener('change', function () {
+                calculateAndDisplayRoute(directionsService, directionsDisplay);
+
+            });
+        }
+
+        function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+            var Lattitude_Start = parseFloat(document.getElementById("lat_a").value);  //get the float value of inputs
+            var Longitude_Start = parseFloat(document.getElementById("lon_a").value);
+            var Lattitude_End = parseFloat(document.getElementById("lat_b").value);
+            var Longitude_End = parseFloat(document.getElementById("lon_b").value);
+
+            //calculating the lat and lon of the cities in between the routes
+            var latx = (Lattitude_Start + Lattitude_End) / 2;
+            var lonx = (Longitude_Start + Longitude_End) / 2;
+            var altx1 = (latx + Lattitude_Start) / 2;
+            var laty1 = (Longitude_Start + lonx) / 2;
+            var altx2 = (altx1 / 2);
+            var alty2 = (laty1 / 2);
+
+
+            directionsService.route({
+                origin: { lat: Lattitude_Start, lng: Longitude_Start }, //route function contains the latitude and longitude of the user input
+                destination: {
+                    lat: Lattitude_End, lng: Longitude_End
+                },
+                waypoints: [{ location: new google.maps.LatLng(latx, lonx) }, { location: new google.maps.LatLng(altx1, laty1) }], //cities in between the routes
+                optimizeWaypoints: true,
+                travelMode: 'DRIVING'  // can be walking, driving, transit 
+
+            },
+
+                // if the location is found the request is accepted
+
+                function (response, status) {
+                    if (status == 'OK') {
+                        directionsDisplay.setDirections(response);
+
+                    } else { // if can't locate the location gives an error
+                        window.alert('Directions request failed due to ' + status);
+                    }
+                });
+        }
+    </script>
+
+
+
+
+    <script async defer <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDfaJKXp4KQdi0x1ibslP2MyVQn0XGrAGc&callback=Map"
+        async defer></script>
+
+
+
+    <div class="container">
+        <div class="a1"></div>
+        <div class="a2"></div>
+        <div class="a3"></div>
+        <div class="a4"></div>
+        <script>
+            //api key for weather map
+            // in ajax 
+            //contains url and datas which is passed by user later 
+            let API_KEY = 'a80710b44c71c87f621d9bbc9fda57bf';
+
+            function getWeather(latitude, longtitude) {
+                $.ajax({
+                    url: 'http://api.openweathermap.org/data/2.5/weather',
+                    data: {
+                        lat: latitude,
+                        lon: longtitude,
+                        units: 'imperial',
+                        APPID: API_KEY
+                    },
+                    success: data => {
+                        var x = JSON.stringify("Point A: " + data["name"]);  //object needs to be changed to string . display the name
+                        var x2 = JSON.stringify("Temperature Right now: " + data["main"]["temp"] + " F "); // gets string value of the temperature
+                        var y = JSON.stringify("Low Temperature: " + data["main"]["temp_min"] + " F "); //gets string value of the lowest temperature
+                        var z = JSON.stringify("High Temperature: " + data["main"]["temp_max"] + " F ");//gets string value of the highest tempertature
+                        var name = document.getElementsByClassName("a1");
+                        name[0].innerHTML = x; // displays the name
+                        var temp_now = document.getElementsByClassName("a2");
+                        temp_now[0].innerHTML = x2;//displays the temperature
+                        var temp_low = document.getElementsByClassName("a3");
+                        temp_low[0].innerHTML = y; //displays the lowest temeperature
+                        var temp_high = document.getElementsByClassName("a4");
+                        temp_high[0].innerHTML = z; //displays the highest temperature
+
+                    }
+
+                })
+            }
+
+        </script>
+
+
+    </div>
+    <div class="container1">
+        <div class="b1"></div>
+
+        <div class="b2"></div>
+        <div class="b3"></div>
+        <div class="b4"></div>
+        <script>
+            //api key for weather map
+            // in ajax 
+            //contains url and datas which is passed by user later 
+
+
+
+            let API_KEY2 = 'a80710b44c71c87f621d9bbc9fda57bf';
+
+            function getWeather2(latitude, longtitude) {
+                $.ajax({
+                    url: 'http://api.openweathermap.org/data/2.5/weather',
+                    data: {
+                        lat: latitude,
+                        lon: longtitude,
+                        units: 'imperial',
+                        APPID: API_KEY2
+                    },
+                    success: data => {
+                        var x = JSON.stringify("Point B : " + data["name"]);//object needs to be changed to string to display the name
+                        var x2 = JSON.stringify("Temperature Right now: " + data["main"]["temp"] + " F ");//object needs to be changed to string to display the temp
+                        var y = JSON.stringify("Low Temperature: " + data["main"]["temp_min"] + " F ");//object needs to be changed to string to display the lowest temp
+                        var z = JSON.stringify("High Temperature: " + data["main"]["temp_max"] + " F ");//object needs to be changed to string to display the highest temp
+                        var name = document.getElementsByClassName("b1");
+                        name[0].innerHTML = x; // displays the name
+                        var temp_now = document.getElementsByClassName("b2");
+                        temp_now[0].innerHTML = x2;//displays the  temperature
+                        var temp_low = document.getElementsByClassName("b3");
+                        temp_low[0].innerHTML = y;//displays the lowest temperature
+                        var temp_high = document.getElementsByClassName("b4");
+                        temp_high[0].innerHTML = z;//displays the highest temperature
+
+                    }
+
+                })
+            }
+
+
+        </script>
+    </div>
+    <div class="container2">
+        <div class="c1"></div>
+
+        <div class="c2"></div>
+        <div class="c3"></div>
+        <div class="c4"></div>
+        <script>
+            //api key for weather map
+            // in ajax 
+            //contains url and datas which is passed by user later 
+            let API_KEY3 = 'a80710b44c71c87f621d9bbc9fda57bf';
+
+            function getWeather3(latitude, longtitude) {
+                $.ajax({
+                    url: 'http://api.openweathermap.org/data/2.5/weather',
+                    data: {
+                        lat: latitude,
+                        lon: longtitude,
+                        units: 'imperial',
+                        APPID: API_KEY3
+                    },
+                    success: data => {
+                        console.log(data);
+                        var x = JSON.stringify("Point C: " + data["name"]);
+                        var x2 = JSON.stringify("Temperature Right now: " + data["main"]["temp"] + " F ");
+                        var y = JSON.stringify("Low Temperature: " + data["main"]["temp_min"] + " F ");
+                        var z = JSON.stringify("High Temperature: " + data["main"]["temp_max"] + " F ");
+                        var name = document.getElementsByClassName("c1");
+                        name[0].innerHTML = x;
+                        var temp_now = document.getElementsByClassName("c2");
+                        temp_now[0].innerHTML = x2;
+                        var temp_low = document.getElementsByClassName("c3");
+                        temp_low[0].innerHTML = y;
+                        var temp_high = document.getElementsByClassName("c4");
+                        temp_high[0].innerHTML = z;
+
+                    }
+
+                })
+            }
+
+
+
+        </script>
+
+    </div>
+    <div class="container3">
+        <div class="d1"></div>
+
+        <div class="d2"></div>
+        <div class="d3"></div>
+        <div class="d4"></div>
+
+        <script>
+            //api key for weather map
+            // in ajax 
+            //contains url and datas which is passed by user later 
+
+            let API_KEY4 = 'a80710b44c71c87f621d9bbc9fda57bf';
+
+            function getWeather4(latitude, longtitude) {
+                $.ajax({
+                    url: 'http://api.openweathermap.org/data/2.5/weather',
+                    data: {
+                        lat: latitude,
+                        lon: longtitude,
+                        units: 'imperial',
+                        APPID: API_KEY4
+                    },
+                    success: data => {
+                        console.log(data);
+                        var x = JSON.stringify("Point D: " + data["name"]);
+                        var x2 = JSON.stringify("Temperature Right now: " + data["main"]["temp"] + " F ");
+                        var y = JSON.stringify("Low Temperature: " + data["main"]["temp_min"] + " F ");
+                        var z = JSON.stringify("High Temperature: " + data["main"]["temp_max"] + " F ");
+                        var name = document.getElementsByClassName("d1");
+                        name[0].innerHTML = x;
+                        var temp_now = document.getElementsByClassName("d2");
+                        temp_now[0].innerHTML = x2;
+                        var temp_low = document.getElementsByClassName("d3");
+                        temp_low[0].innerHTML = y;
+                        var temp_high = document.getElementsByClassName("d4");
+                        temp_high[0].innerHTML = z;
+
+
+
+                    }
+
+                })
+            }
+        </script>
+        <Script>
+            document.querySelector('#s').addEventListener('click', function () { //when button is pressed it will fire the weather function
+                var Lattitude_Start = parseFloat(document.getElementById("lat_a").value);
+                var Longitude_Start = parseFloat(document.getElementById("lon_a").value);
+                var Lattitude_End = parseFloat(document.getElementById("lat_b").value);
+                var Longitude_End = parseFloat(document.getElementById("lon_b").value);
+                var x = ((Lattitude_Start + Lattitude_End) / 4);
+                var y = ((Longitude_Start + Longitude_End) / 4);
+                //call function to get the weather of that location
+                getWeather(Lattitude_Start, Longitude_Start);
+                getWeather2(((Lattitude_Start + Lattitude_End) / 2), ((Longitude_Start + Longitude_End) / 2));
+                getWeather3(x, y);
+                getWeather4(Lattitude_End, Longitude_End);
+
+            });
+
+
+
+        </script>
+
+
+
+
+</html>
